@@ -2,56 +2,65 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ترتيلا - لوحة أبطال القرآن 🌟</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ترتيلا - لوحة الأبطال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body { font-family: 'Cairo', sans-serif; text-align: center; background: #f9f9f9; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        .wird { background: #93679A; color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: bold; font-size: 1.2rem; }
-        .stats { display: flex; justify-content: space-around; margin: 10px 0; font-weight: bold; color: #93679A; }
-        .student-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .badge { background: #E2F0CB; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
+        body { font-family: 'Amiri', serif; background: #F8F9FA; display: flex; justify-content: center; padding: 20px; }
+        .main-card { background: white; width: 100%; max-width: 450px; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid #EEE; }
+        
+        /* تصميم "ترتيلا" بفخامة */
+        h1 { font-family: 'Reem Kufi', sans-serif; font-size: 3rem; color: #93679A; margin-bottom: 5px; }
+        .teacher-name { font-size: 1.2rem; color: #666; margin-bottom: 20px; border-bottom: 1px solid #EEE; padding-bottom: 15px; }
+        
+        /* الجملة التحفيزية */
+        .quote-box { font-size: 1.1rem; color: #4A354F; background: #F3EEF5; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-style: italic; }
+        
+        .wird-box { background: #93679A; color: white; padding: 20px; border-radius: 20px; margin: 20px 0; font-size: 1.4rem; font-weight: bold; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #EEE; border-radius: 15px; text-align: center; font-size: 1.1rem; }
+        button { background: #D4AF37; color: white; width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #EEE; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>تَرْتِيلَا 🌟</h1>
-        <p>تحت إشراف المعلمة بسنت أحمد</p>
-        <div class="wird" id="wirdDisplay">جاري سحب الورد...</div>
-        <div class="stats"><span>الالتزام: 0 يوم</span> <span>النقاط: 0 XP</span></div>
-        <input type="text" id="studentName" placeholder="اكتب اسمك يا بطل">
-        <button id="submitBtn" onclick="sendData()" style="width:100%; padding:10px; background:#D4AF37; color:white; border:none; border-radius:10px; cursor:pointer;">تم الإنجاز ✅</button>
-    </div>
+    <div class="main-card">
+        <h1>ترتيلا</h1>
+        <div class="teacher-name">تحت إشراف المعلمة بسنت أحمد</div>
+        
+        <div class="quote-box">
+            "يا بطل، وردك اليومي نورٌ في قلبك، وقربٌ من الله.. دُمتَ ملتزماً ليحبك الله ويرفع قدرك" 🌿
+        </div>
 
-    <div class="card" style="margin-top: 20px;">
+        <div id="wirdDisplay" class="wird-box">جاري التحميل...</div>
+        <input type="text" id="studentName" placeholder="اكتب اسم البطل هنا...">
+        <button onclick="sendData()">تم الإنجاز ✅</button>
+        
+        <hr style="margin: 30px 0; opacity: 0.3;">
         <h3>لوحة الأبطال 🏆</h3>
-        <div id="list">تحميل...</div>
+        <div id="leaderboardList"></div>
     </div>
 
 <script>
-    const scriptURL =https://script.google.com/macros/s/AKfycbxUY59f2H93zSSCS6K8Fiy7_IKnFugG4LAHA7Y1tjx8D2swWSLR4tWduj82hgeT_Gsz/exec;
+    const scriptURL = https://script.google.com/macros/s/AKfycbxt78FgWNj40Wt7kmfbH4k4i-3YtDSCraBCkT3dKhyN1hmBGvhgtLQFq_WR3JBLA8OW/exec';
 
     async function loadData() {
-        const res = await fetch(scriptURL + '?nocache=' + new Date().getTime());
-        const data = await res.json();
-        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في B1";
-        
-        const listDiv = document.getElementById('list');
-        listDiv.innerHTML = data.leaderboard.map((name, i) => `
-            <div class="student-item">
-                <span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#'} ${name}</span>
-                <span class="badge">${i==0?'بطل ماسي💎':i==1?'حافظ محترف👑':'بطل ملتزم⭐'}</span>
-            </div>`).join('');
+        try {
+            const res = await fetch(scriptURL);
+            const data = await res.json();
+            document.getElementById('wirdDisplay').innerText = data.wirdText;
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = data.leaderboard.map(n => `<div class="leaderboard-item"><span>${n}</span><span>⭐</span></div>`).join('');
+        } catch(e) { document.getElementById('wirdDisplay').innerText = "خطأ في الاتصال"; }
     }
 
     async function sendData() {
-        const name = document.getElementById('studentName').value.trim();
-        if (!name) return alert("اكتب اسمك!");
-        
+        const name = document.getElementById('studentName').value;
+        if(!name) return alert("اكتب الاسم يا بطل!");
         confetti();
-        await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`, { method: 'GET', mode: 'no-cors' });
-        alert("تم تسجيل إنجازك يا بطل!");
-        setTimeout(loadData, 1000);
+        await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`);
+        alert("تقبّل الله منك يا بطل!");
+        loadData();
     }
     window.onload = loadData;
 </script>
