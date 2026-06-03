@@ -27,21 +27,24 @@
     </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzWnc8KbM9H3RUO4LTNr2kFxy1eyz8BtI314fNl2guZD7vkxHfgu1pLSxSBVO6TTo8/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwfc57rz3yAXb0GnsSudFNZ_3oCkjIc94W8IVzpCOFNARTE04cKh6W7CEk5UT0BlVht/exec';
 
     async function loadData() {
         const res = await fetch(scriptURL);
         const data = await res.json();
         document.getElementById('wirdDisplay').innerText = data.wirdText;
-        document.getElementById('list').innerHTML = data.leaderboard.map((n, i) => 
-            `<div class="hero"><span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#'} ${n}</span><span>⭐ بطل متميز</span></div>`).join('');
+        document.getElementById('list').innerHTML = data.leaderboard.map((item, i) => {
+            let badge = i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#';
+            let msg = i==0?'خاتم للقرآن الكريم💎':i==1?'حافظ متميز👑':'بطل ملتزم⭐';
+            return `<div class="hero"><span>${badge} ${item.name}</span><span style="font-size:0.8rem; color:#D4AF37">${msg} (${item.days} أيام)</span></div>`;
+        }).join('');
     }
 
     async function sendData() {
         const name = document.getElementById('studentName').value;
         if(!name) return alert("اكتب الاسم!");
         await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`);
-        alert("بارك الله فيك يا بطل!");
+        alert("تقبل الله منك يا بطل!");
         loadData();
     }
     window.onload = loadData;
