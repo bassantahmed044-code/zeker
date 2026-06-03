@@ -30,7 +30,7 @@
     </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxhyJ5kIKIIg0aLXI7eCtVP51_5xoEcqYUoOcz4tr-ACHAMO7qzwLBlhXiFZpWOcqA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxbmp_5mgjZCoxA4jxNXEmuVULKyHVXeLpn_bEjkhWuhvrki3ZqpGnSrNm3zwvttQ_T/exec';
 
     async function loadData() {
         const res = await fetch(scriptURL);
@@ -38,7 +38,7 @@
         document.getElementById('wirdDisplay').innerText = data.wirdText;
         document.getElementById('list').innerHTML = data.leaderboard.map((item, i) => {
             let badge = i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#';
-            let msg = i==0?'خاتم للقرآن الكريم💎':i==1?'حافظ متميز👑':'بطل ملتزم⭐';
+            let msg = i==0?'بطل اولى للذكر💎':i==1?'حافظ متميز👑':' بطل ملتز⭐';
             return `<div class="hero"><span>${badge} ${item.name}</span><span style="font-size:0.8rem; color:#D4AF37">${msg} (${item.days} أيام)</span></div>`;
         }).join('');
     }
