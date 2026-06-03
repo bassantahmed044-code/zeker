@@ -17,21 +17,21 @@
         <h1>تَرْتِيلَا 🌟</h1>
         <div class="wird" id="wirdDisplay">جاري سحب الورد...</div>
         <input type="text" id="studentName" placeholder="اكتب اسمك يا بطل">
-        <button id="submitBtn" onclick="sendData()">تم الإنجاز ✅</button>
+        <button id="submitBtn" onclick="sendData()">تم الإنجاز ويجمع النقاط ✅</button>
     </div>
-
     <div class="card" style="margin-top: 20px;">
         <h3>لوحة الأبطال 🏆</h3>
         <div id="list">تحميل...</div>
     </div>
 
 <script>
-    const scriptURL = https://script.google.com/macros/s/AKfycbyWzZm3GHecpf2ehSMVWM9Wskw79ZpTz7e-qWq7fhoBnGEGJuLy14QiDKHKk1Z6Sm3S/exec;
+    // ضعي رابط الـ Web App الخاص بكِ هنا
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz_ogd_t7MWB02_WEHlwBPRVZmwdWFNdFqS_8W6Tc_2937G2Joaw07soYRmGgoAOdJX/exec';
 
     async function loadData() {
         const res = await fetch(scriptURL + '?nocache=' + new Date().getTime());
         const data = await res.json();
-        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في الخلية B1";
+        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في B1";
         
         const listDiv = document.getElementById('list');
         listDiv.innerHTML = data.leaderboard.map((name, i) => `
@@ -43,15 +43,12 @@
 
     async function sendData() {
         const name = document.getElementById('studentName').value.trim();
-        if (!name) return alert("اكتب اسمك!");
-        
+        if (!name) return alert("اكتبي الاسم!");
         document.getElementById('submitBtn').disabled = true;
         confetti();
-        
-        // هنا نرسل الاسم فقط إلى الرابط (بدون التاريخ أو الورد)
+        // إرسال الاسم فقط
         await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`, { method: 'GET', mode: 'no-cors' });
-        
-        alert("تم تسجيلك يا بطل!");
+        alert("تم التسجيل!");
         setTimeout(loadData, 1000);
         document.getElementById('submitBtn').disabled = false;
     }
