@@ -1,58 +1,19 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>ترتيلا - لوحة أبطال القرآن 🌟</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <style>
-        body { font-family: 'Cairo', sans-serif; text-align: center; background: #f9f9f9; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        .wird { background: #93679A; color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: bold; }
-        .student-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .badge { background: #E2F0CB; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>تَرْتِيلَا 🌟</h1>
-        <div class="wird" id="wirdDisplay">جاري سحب الورد...</div>
-        <input type="text" id="studentName" placeholder="اكتب اسمك يا بطل">
-        <button id="submitBtn" onclick="sendData()">تم الإنجاز ويجمع النقاط ✅</button>
-    </div>
-    <div class="card" style="margin-top: 20px;">
-        <h3>لوحة الأبطال 🏆</h3>
-        <div id="list">تحميل...</div>
-    </div>
+function doGet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var wird = sheet.getRange("B1").getValue(); // الورد في B1
+  var names = sheet.getRange("A:A").getValues().filter(String).flat(); // الأسماء في A
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    "wirdText": wird,
+    "leaderboard": names
+  })).setMimeType(ContentService.MimeType.JSON);
+}
 
-<script>
-    // ضعي رابط الـ Web App الخاص بكِ هنا
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz_ogd_t7MWB02_WEHlwBPRVZmwdWFNdFqS_8W6Tc_2937G2Joaw07soYRmGgoAOdJX/exec';
-
-    async function loadData() {
-        const res = await fetch(scriptURL + '?nocache=' + new Date().getTime());
-        const data = await res.json();
-        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في B1";
-        
-        const listDiv = document.getElementById('list');
-        listDiv.innerHTML = data.leaderboard.map((name, i) => `
-            <div class="student-item">
-                <span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#'} ${name}</span>
-                <span class="badge">${i==0?'بطل ماسي💎':i==1?'حافظ محترف👑':'بطل ملتزم⭐'}</span>
-            </div>`).join('');
-    }
-
-    async function sendData() {
-        const name = document.getElementById('studentName').value.trim();
-        if (!name) return alert("اكتبي الاسم!");
-        document.getElementById('submitBtn').disabled = true;
-        confetti();
-        // إرسال الاسم فقط
-        await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`, { method: 'GET', mode: 'no-cors' });
-        alert("تم التسجيل!");
-        setTimeout(loadData, 1000);
-        document.getElementById('submitBtn').disabled = false;
-    }
-    window.onload = loadData;
-</script>
-</body>
-</html>
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var name = e.parameter.name;
+  if (name) {
+    sheet.appendRow([name]);
+  }
+  return ContentService.createTextOutput("Success");
+}
