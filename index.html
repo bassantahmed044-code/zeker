@@ -19,7 +19,10 @@
         <p>تحت إشراف المعلمة بسنت أحمد</p>
         <div class="quote">"يا بطل، وردك اليومي نورٌ في قلبك.. دُمتَ ملتزماً ليحبك الله ويرفع قدرك" 🌿</div>
         <div id="wirdDisplay" class="wird-box">جارٍ جلب الورد...</div>
-        <div class="stats-bar"><span>الالتزام: 0 يوم ✨</span> <span>النقاط: 0 XP 💎</span></div>
+       <div class="stats-bar">
+    <span id="xpDisplay">النقاط: 0 XP 💎</span>
+    <span id="daysDisplay">الالتزام: 0 يوم ✨</span> 
+</div>
         <input type="text" id="studentName" placeholder="اكتب اسم البطل..." style="width:100%; padding:15px; border-radius:15px; border:1px solid #ddd; margin-bottom:10px;">
         <button onclick="sendData()">تم الإنجاز ✅</button>
         <h3>لوحة الأبطال 🏆</h3>
@@ -27,7 +30,7 @@
     </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwfc57rz3yAXb0GnsSudFNZ_3oCkjIc94W8IVzpCOFNARTE04cKh6W7CEk5UT0BlVht/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxsRXR7fGQZVyJI4XTNcNhYvzy4ZxLZiSp77Uy-nDWoSnskUD7to7lbGXxHq69a-Lr4/exec';
 
     async function loadData() {
         const res = await fetch(scriptURL);
