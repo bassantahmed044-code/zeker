@@ -2,101 +2,59 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ترتيلا - لوحة أبطال القرآن 🌟</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root { --purple-main: #93679A; --purple-light: #F3EEF5; --gold: #D4AF37; --text-dark: #4A354F; --mint: #E2F0CB; }
-        body { background: linear-gradient(125deg, #FFF0F5, #F3EEF5, #E8F4F8); font-family: 'Cairo', sans-serif; padding: 20px; text-align: center; color: var(--text-dark); min-height: 100vh; }
-        .card, .leaderboard { background: white; padding: 25px; border-radius: 30px; border: 3px solid var(--purple-light); max-width: 440px; margin: 20px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .wird-box { background: linear-gradient(135deg, var(--purple-main), #b38cb9); padding: 20px; border-radius: 20px; color: white; font-size: 1.35rem; margin: 20px 0; }
-        .hero-stats { display: flex; justify-content: space-around; margin-bottom: 20px; background: var(--purple-light); padding: 10px; border-radius: 15px; }
-        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 2px solid var(--purple-light); font-size: 1.1rem; box-sizing: border-box; }
-        button { background: linear-gradient(135deg, var(--gold), #AA7C11); color: white; cursor: pointer; border: none; font-weight: bold; }
-        .student-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
-        .rank { font-weight: bold; color: var(--purple-main); }
-        .badge-tag { background: var(--mint); padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+        body { font-family: 'Cairo', sans-serif; text-align: center; background: #f9f9f9; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        .wird { background: #93679A; color: white; padding: 15px; border-radius: 15px; margin: 15px 0; font-weight: bold; }
+        .student-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .badge { background: #E2F0CB; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <h1>تَرْتِيلَا</h1>
-        <div class="wird-box" id="wirdDisplay">جاري سحب الورد...</div>
-        <div class="hero-stats">
-            <div>الالتزام: <span id="localStreak">0</span> يوم</div>
-            <div>نقاطك: <span id="localXP">0</span> XP</div>
-        </div>
-        <input type="text" id="studentName" placeholder="اكتب اسمك يا بطل" oninput="loadHeroStats()">
-        <button id="submitBtn" onclick="sendData()">تم الإنجاز ويجمع النقاط ✅</button>
+        <h1>تَرْتِيلَا 🌟</h1>
+        <div class="wird" id="wirdDisplay">جاري سحب الورد...</div>
+        <input type="text" id="studentName" placeholder="اكتب اسمك يا بطل">
+        <button id="submitBtn" onclick="sendData()">تم الإنجاز ✅</button>
     </div>
 
-    <div class="leaderboard">
-        <h3>لوحة الأبطال المتصدرين 🏆</h3>
-        <div id="list">تحميل قائمة الأبطال...</div>
+    <div class="card" style="margin-top: 20px;">
+        <h3>لوحة الأبطال 🏆</h3>
+        <div id="list">تحميل...</div>
     </div>
 
 <script>
-    const scriptURL =https://script.google.com/macros/s/AKfycbxZV3lt79IVGmWokxhFXbu0rpc-jRVOkR7qcvTbQMAJd8b3MlHAuqxZn4ZueelB4Wx_/exec
-
-    function loadHeroStats() {
-        const name = document.getElementById('studentName').value.trim();
-        document.getElementById('localStreak').innerText = localStorage.getItem(name + '_streak') || 0;
-        document.getElementById('localXP').innerText = localStorage.getItem(name + '_xp') || 0;
-    }
-
-    function updateHeroStats(name) {
-        let streak = parseInt(localStorage.getItem(name + '_streak') || 0) + 1;
-        let xp = parseInt(localStorage.getItem(name + '_xp') || 0) + 100;
-        localStorage.setItem(name + '_streak', streak);
-        localStorage.setItem(name + '_xp', xp);
-        loadHeroStats();
-    }
-
-    function getBadge(index) {
-        if (index === 0) return "بطل ماسي 💎";
-        if (index === 1) return "حافظ محترف 👑";
-        if (index === 2) return "مُرتل سريع ⚡";
-        return "بطل ملتزم ⭐";
-    }
+    const scriptURL = https://script.google.com/macros/s/AKfycbyWzZm3GHecpf2ehSMVWM9Wskw79ZpTz7e-qWq7fhoBnGEGJuLy14QiDKHKk1Z6Sm3S/exec;
 
     async function loadData() {
         const res = await fetch(scriptURL + '?nocache=' + new Date().getTime());
         const data = await res.json();
-        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في الشيت";
+        document.getElementById('wirdDisplay').innerText = data.wirdText || "اكتبي الورد في الخلية B1";
         
         const listDiv = document.getElementById('list');
-        if (!data.leaderboard || data.leaderboard.length === 0) {
-            listDiv.innerHTML = "كن أول بطل اليوم! ✨";
-        } else {
-            listDiv.innerHTML = data.leaderboard.map((name, index) => `
-                <div class="student-item">
-                    <span class="rank">${index === 0 ? '🥇 الأول' : index === 1 ? '🥈 الثاني' : index === 2 ? '🥉 الثالث' : (index+1) + '#'}</span>
-                    <span>${name}</span>
-                    <span class="badge-tag">${getBadge(index)}</span>
-                </div>`).join('');
-        }
+        listDiv.innerHTML = data.leaderboard.map((name, i) => `
+            <div class="student-item">
+                <span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':(i+1)+'#'} ${name}</span>
+                <span class="badge">${i==0?'بطل ماسي💎':i==1?'حافظ محترف👑':'بطل ملتزم⭐'}</span>
+            </div>`).join('');
     }
 
     async function sendData() {
         const name = document.getElementById('studentName').value.trim();
-        if (!name) return alert("اكتب اسمك يا بطل!");
-
+        if (!name) return alert("اكتب اسمك!");
+        
         document.getElementById('submitBtn').disabled = true;
-        confetti({ particleCount: 150, origin: { y: 0.6 } });
-        updateHeroStats(name);
-
-        // هنا نرسل الاسم فقط
+        confetti();
+        
+        // هنا نرسل الاسم فقط إلى الرابط (بدون التاريخ أو الورد)
         await fetch(`${scriptURL}?name=${encodeURIComponent(name)}`, { method: 'GET', mode: 'no-cors' });
         
-        alert("بارَك الله فيك! تم تسجيل إنجازك +100 نقطة 🔥"):;
+        alert("تم تسجيلك يا بطل!");
         setTimeout(loadData, 1000);
         document.getElementById('submitBtn').disabled = false;
     }
-
     window.onload = loadData;
 </script>
 </body>
